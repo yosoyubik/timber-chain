@@ -1,0 +1,38 @@
+{
+  "contract_name": "ContractProvider",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "name",
+          "type": "bytes32"
+        }
+      ],
+      "name": "contracts",
+      "outputs": [
+        {
+          "name": "addr",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    }
+  ],
+  "unlinked_binary": "0x",
+  "networks": {
+    "1502905575246": {
+      "links": {},
+      "events": {},
+      "updated_at": 1502906135551
+    },
+    "1502906434859": {
+      "links": {},
+      "events": {},
+      "updated_at": 1502909642227
+    }
+  },
+  "schema_version": "0.0.5",
+  "updated_at": 1502909642227
+}

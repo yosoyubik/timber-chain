@@ -1,0 +1,87 @@
+{
+  "contract_name": "SupplyChainManagerEnabled",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "MANAGER",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "managerAddr",
+          "type": "address"
+        }
+      ],
+      "name": "setManagerAddress",
+      "outputs": [
+        {
+          "name": "result",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "remove",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "isSupplyChainManager",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "getManagerAddress",
+      "outputs": [
+        {
+          "name": "addr",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    }
+  ],
+  "unlinked_binary": "0x6060604052341561000f57600080fd5b5b6102328061001f6000396000f300606060405263ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416631b2df85081146100695780634143190814610098578063a7f43779146100cb578063b3c01165146100e0578063c162d7da14610107575b600080fd5b341561007457600080fd5b61007c610136565b604051600160a060020a03909116815260200160405180910390f35b34156100a357600080fd5b6100b7600160a060020a0360043516610145565b604051901515815260200160405180910390f35b34156100d657600080fd5b6100de6101ad565b005b34156100eb57600080fd5b6100b76101d5565b604051901515815260200160405180910390f35b341561011257600080fd5b61007c6101f6565b604051600160a060020a03909116815260200160405180910390f35b600054600160a060020a031681565b60008054600160a060020a03161580159061016f575060005433600160a060020a03908116911614155b1561017c575060006101a8565b506000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a03831617905560015b919050565b60005433600160a060020a03908116911614156101d257600054600160a060020a0316ff5b5b565b60008054600160a060020a0316156101ef575060016101f3565b5060005b90565b600054600160a060020a03165b905600a165627a7a72305820c7d6f6aa1799924e42a06c12b94b7626fc1b4d687a1e94425a72053b54099c060029",
+  "networks": {
+    "1502905575246": {
+      "events": {},
+      "links": {},
+      "address": "0x70008dcfb067c8e1224adf31063e4b2b529ead68",
+      "updated_at": 1502906135551
+    },
+    "1502906434859": {
+      "events": {},
+      "links": {},
+      "address": "0x969ed9a7ef4a3ea5837611eee20f48ca6fc96128",
+      "updated_at": 1502909642227
+    }
+  },
+  "schema_version": "0.0.5",
+  "updated_at": 1502909642227
+}
