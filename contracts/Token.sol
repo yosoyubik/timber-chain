@@ -6,30 +6,57 @@ import "./Manager.sol";
 import "./ContractProvider.sol";
 
 // The Token Controller
-contract Token is SupplyChainManagerEnabled {
+contract Token is ManagerEnabled {
 
 function issueTokens(address _actor, bytes32 species, bytes32 origin, uint value) returns (bool) {
     // Only the manager can issue Tokens
-    require(isSupplyChainManager());
-    address timberTokenDb = ContractProvider(MANAGER).contracts("timberTokenDb");
-    require(timberTokenDb != 0x0);
-    // Use the interface to call on the timberTokenDb contract.
-    bool success = TimberTokenDb(timberTokenDb).issueTokens(_actor, species, origin, value);
-    return success;
+    require(MANAGER != 0x0);
+    if (msg.sender == MANAGER) {
+      address timberTokenDb = ContractProvider(MANAGER).contracts("timbertokendb");
+      require(timberTokenDb != 0x0);
+      // Use the interface to call on the timberTokenDb contract.
+      bool success = TimberTokenDb(timberTokenDb).issueTokens(_actor, species, origin, value);
+      return success;
+    }
+    return false;
 }
 
   function hasTokens(address actor, bytes32 species, uint value) returns (bool) {
       // Only the Tx contract can check if the address has tokens
-    require(isSupplyChainManager());
     if(MANAGER != 0x0) {
-        /*address transaction = ContractProvider(MANAGER).contracts("transaction");*/
-        if (msg.sender == MANAGER) { // TODO: change later to Transaction contract
-            address timberTokenDb = ContractProvider(MANAGER).contracts("timberTokenDb");
+        address transaction = ContractProvider(MANAGER).contracts("transaction");
+        if (msg.sender == transaction) { // TODO: change later to Transaction contract
+            address timberTokenDb = ContractProvider(MANAGER).contracts("timbertokendb");
             require(timberTokenDb != 0x0);
             // Use the interface to call on the timberTokenDb contract.
-            bool success = TimberTokenDb(timberTokenDb).hasTokens(actor, species, value);
-            return success;
+            return TimberTokenDb(timberTokenDb).hasTokens(actor, species, value);
         }
+    }
+    return false;
+  }
+  
+  function decreaseTokens(address actor, bytes32 species, uint value) returns (bytes32, uint) {
+      // Only the Tx contract can check if the address has tokens
+    if(MANAGER != 0x0) {
+        address transaction = ContractProvider(MANAGER).contracts("transaction");
+        if (msg.sender == transaction) {
+            /*return ("", 4);*/
+            address timbertokendb = ContractProvider(MANAGER).contracts("timbertokendb");
+            return TimberTokenDb(timbertokendb).decreaseTokens(actor, species, value);
+        }
+    }
+    return ("", 0);
+  }
+  
+  function increaseTokens(address actor, bytes32 species, bytes32 origin, uint value) returns (bool) {
+      // Only the Tx contract can check if the address has tokens
+    if(MANAGER != 0x0) {
+      address transaction = ContractProvider(MANAGER).contracts("transaction");
+      if (msg.sender == transaction) { // TODO: change later to Transaction contract
+          address timbertokendb = ContractProvider(MANAGER).contracts("timbertokendb");
+          bool success = TimberTokenDb(timbertokendb).increaseTokens(actor, species, origin, value);
+          return success;
+      }
     }
     return false;
   }

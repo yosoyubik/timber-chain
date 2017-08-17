@@ -7,18 +7,37 @@ import "./ContractProvider.sol";
 // The bank database
 contract TimberTokenDb is ManagerEnabled {
 
-    struct Token {
-      bytes32 species;
-      bytes32 origin;
-      uint value;
+    struct BigNumber {
+        uint[2] coeficient;
+        uint exponent;
+        uint sign;
     }
-    /*address owner;*/
+
+    /*struct Token {
+      bytes32 origin;
+      // e.g: 'DK' => 256
+      mapping (bytes32 => uint) speciesCount;
+      //mapping (bytes32 => BigNumber) speciesCount;
+    }*/
+
+    struct Token {
+      bytes32 origin;
+      bytes32 species;
+      uint value;
+      /*BigNumber value;*/
+      // e.g: 'DK' => 256
+      /*mapping (bytes32 => uint) speciesCount;*/
+      /*mapping (bytes32 => BigNumber) speciesCount;*/
+    }
 
     mapping (address => Token[]) public balances;
+    /*mapping (address => Token) public balances;*/
     uint public nAddress;
-    /*function TimberToken() {
-        owner = msg.sender;
-    }*/
+
+    function getValue(address _actor) returns (uint) {
+        Token[] myTokens = balances[_actor];
+        return myTokens[0].value;
+    }
 
     function issueTokens(address _actor, bytes32 species, bytes32 origin, uint value) returns (bool){
         require(MANAGER != 0x0);
@@ -37,9 +56,13 @@ contract TimberTokenDb is ManagerEnabled {
         address token = ContractProvider(MANAGER).contracts("token");
         if (msg.sender == token) {
             Token[] tokens = balances[actor];
+            uint sumValue=0;
             for (uint i = 0; i < tokens.length; i++) {
-                if (tokens[i].species == species && tokens[i].value >= value) {
-                    return true;
+                if (tokens[i].species == species) {
+                    sumValue += tokens[i].value;
+                    if(sumValue >= value) {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -47,7 +70,52 @@ contract TimberTokenDb is ManagerEnabled {
         return false;
     }
 
+    function increaseTokens(address actor, bytes32 species, bytes32 origin, uint value) returns (bool) {
+        // Only the Tx contract can check if the address has tokens
+      if(MANAGER != 0x0) {
+        address transaction = ContractProvider(MANAGER).contracts("token");
+        if (msg.sender == transaction) {
+            Token[] tokens = balances[actor];
+                for (uint i = 0; i < tokens.length; i++) {
+                    if (tokens[i].species == species && tokens[i].origin == origin) {
+                        tokens[i].value += value;
+                        return true;
+                    }
+                }
+                Token memory timberToken;
+                timberToken.species = species;
+                timberToken.origin = origin;
+                timberToken.value = value;
+                balances[actor].push(timberToken);
+            }
+        }
+      return false;
+    }
 
+    // returns decreased value
+    function decreaseTokens(address actor, bytes32 species, uint value) returns (bytes32, uint) {
+        // Only the Tx contract can check if the address has tokens
+      if(MANAGER != 0x0) {
+        address token = ContractProvider(MANAGER).contracts("token");
+        if (msg.sender == token) {
+            Token[] tokens = balances[actor];
+                for(uint i=0; i < tokens.length; i++) {
+                    if(tokens[i].species == species && tokens[i].value > 0){
+                        uint v = 0;
+                        if(tokens[i].value <= value) {
+                            v = tokens[i].value;
+                        }
+                        else if(tokens[i].value >= value){
+                            v = value;
+                        }
+                        tokens[i].value -= v;
+                        return (tokens[i].origin, v);
+                    }
+                }
+            }
+     }
+     return ("", 0);
+  }
 
 
 

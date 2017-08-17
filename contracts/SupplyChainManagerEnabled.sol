@@ -11,9 +11,8 @@ contract SupplyChainManagerEnabled is ManagerEnabled {
     // Makes it easier to check that fundmanager is the caller.
     function isSupplyChainManager() constant returns (bool) {
         if(MANAGER != 0x0){
-            return true;
-            /*address fm = ContractProvider(MANAGER).contracts("supplychainmanager");
-            return msg.sender == fm;*/
+            address fm = ContractProvider(MANAGER).contracts("supplychainmanager");
+            return msg.sender == fm;
         }
         return false;
     }
