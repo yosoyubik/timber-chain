@@ -35,7 +35,20 @@ function issueTokens(address _actor, bytes32 species, bytes32 origin, uint value
     return false;
   }
   
-  function decreaseTokens(address actor, bytes32 species, uint value) returns (bytes32, uint) {
+  function getTokens(address _actor, bytes32 species, bytes32 origin) returns (uint) {
+    if(MANAGER != 0x0) {
+        address transaction = ContractProvider(MANAGER).contracts("transaction");
+        if (msg.sender == transaction) { // TODO: change later to Transaction contract
+            address timberTokenDb = ContractProvider(MANAGER).contracts("timbertokendb");
+            require(timberTokenDb != 0x0);
+            // Use the interface to call on the timberTokenDb contract.
+            return TimberTokenDb(timberTokenDb).getTokens(_actor, species, origin);
+        }
+    }
+    return 0;
+   }
+  
+  function decreaseTokens(address actor, bytes32 species, uint value) returns (bytes32, uint, uint) {
       // Only the Tx contract can check if the address has tokens
     if(MANAGER != 0x0) {
         address transaction = ContractProvider(MANAGER).contracts("transaction");
@@ -45,7 +58,7 @@ function issueTokens(address _actor, bytes32 species, bytes32 origin, uint value
             return TimberTokenDb(timbertokendb).decreaseTokens(actor, species, value);
         }
     }
-    return ("", 0);
+    return ("", 0, 0);
   }
   
   function increaseTokens(address actor, bytes32 species, bytes32 origin, uint value) returns (bool) {

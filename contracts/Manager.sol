@@ -43,6 +43,13 @@ contract Manager {
       return success;
   }
 
+  function getTokens(address _actor, bytes32 species, bytes32 origin) onlyOwner returns (uint) {
+      address token = contracts["token"];
+      uint value =  Token(token).getTokens(_actor, species, origin);
+      return value;
+  }
+
+
   function getNumberOfContracts() returns (uint){
       return nContracts;
   }

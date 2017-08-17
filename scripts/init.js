@@ -36,7 +36,8 @@ module.exports = function (callback) {
 
 // Trading
   var tx = Transaction.at(Transaction.address);
-  // tx.trade(web3.eth.accounts[4], 4, 'oak');
+
+  // tx.trade(web3.eth.accounts[2], 4, 'oak');
 
   return callback();
 }
@@ -49,5 +50,5 @@ module.exports = function (callback) {
 //
 //
 // TRADE
-// tx = Transaction.at(Transaction.address) ; tx.trade(web3.eth.accounts[4], 4, 'oak')
+// tx = Transaction.at(Transaction.address) ; tx.trade(web3.eth.accounts[2], 4, 'oak')
 //

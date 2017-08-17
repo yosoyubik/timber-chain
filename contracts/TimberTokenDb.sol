@@ -70,6 +70,21 @@ contract TimberTokenDb is ManagerEnabled {
         return false;
     }
 
+    function getTokens(address actor, bytes32 species, bytes32 origin) returns ( uint){
+        address token = ContractProvider(MANAGER).contracts("token");
+        if (msg.sender == token) {
+            Token[] tokens = balances[actor];
+            for (uint i = 0; i < tokens.length; i++) {
+                if (tokens[i].species == species && tokens[i].origin == origin) {
+                    return tokens[i].value;
+                }
+            }
+            return 0;
+        }
+        return 0;
+    }
+
+
     function increaseTokens(address actor, bytes32 species, bytes32 origin, uint value) returns (bool) {
         // Only the Tx contract can check if the address has tokens
       if(MANAGER != 0x0) {
@@ -93,7 +108,7 @@ contract TimberTokenDb is ManagerEnabled {
     }
 
     // returns decreased value
-    function decreaseTokens(address actor, bytes32 species, uint value) returns (bytes32, uint) {
+    function decreaseTokens(address actor, bytes32 species, uint value) returns (bytes32, uint, uint) {
         // Only the Tx contract can check if the address has tokens
       if(MANAGER != 0x0) {
         address token = ContractProvider(MANAGER).contracts("token");
@@ -109,12 +124,12 @@ contract TimberTokenDb is ManagerEnabled {
                             v = value;
                         }
                         tokens[i].value -= v;
-                        return (tokens[i].origin, v);
+                        return (tokens[i].origin, v, tokens[i].value);
                     }
                 }
             }
      }
-     return ("", 0);
+     return ("", 0, 0);
   }
 
 
