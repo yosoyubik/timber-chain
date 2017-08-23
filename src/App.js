@@ -9,6 +9,8 @@ import './css/open-sans.css'
 import './css/pure-min.css'
 import './App.css'
 
+import '../node_modules/bootstrap/dist/css/bootstrap.css';
+
 class App extends Component {
 
 
@@ -26,6 +28,9 @@ class App extends Component {
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+
+    this.handleIssueSubmit = this.handleIssueSubmit.bind(this);
+    this.handleIssueChange = this.handleIssueChange.bind(this);
 
   }
 
@@ -62,12 +67,12 @@ class App extends Component {
          console.log(txinstance);
          this.state.web3.eth.getAccounts((error, accounts) => {
              console.log(accounts);
-            //  txinstance.trade(this.state.address, parseInt(this.state.value), this.state.species, {from: accounts[0]});
-             txinstance.fakeTrade();
+             txinstance.trade(this.state.address, parseInt(this.state.value), this.state.species, {from: accounts[0] , gas:999999});
+            //  txinstance.fakeTrade();
             //  console.log(txinstance.getTokens.call(accounts[0], 'oak', 'DK', {from: accounts[0]}).then(value => {
             //      return value;
             //  }));
-             //  tx.trade(web3.eth.accounts[2], 4, 'oak')
+            //   txinstance.trade(accounts[1], 4, 'oak', {from: accounts[0], gas:999999})
          });
 
 
@@ -87,6 +92,59 @@ class App extends Component {
           case 'species':
             this.setState({species: event.target.value});
             break;
+          default:
+              '';
+      }
+  }
+
+
+  handleIssueSubmit(event) {
+    //  alert('A name was submitted: ' + this.state.value);
+     // Access all state and send to Blockchain
+
+     event.preventDefault();
+
+     const contract = require('truffle-contract');
+     const manager = contract(Manager);
+     // manager.issueTokens(web3.eth.accounts[0], 'oak', 'DK', 34);
+
+     manager.setProvider(this.state.web3.currentProvider);
+     console.log(this.state);
+     manager.deployed().then(managerinstance => {
+         console.log(managerinstance);
+         this.state.web3.eth.getAccounts((error, accounts) => {
+             console.log(accounts);
+             console.log(this.state);
+             managerinstance.issueTokens(this.state.issueAddress, this.state.issueSpecies, this.state.issueCountry, parseInt(this.state.issueVolume), {from: accounts[0], gas: 999999});
+
+            //  managerinstance.trade(this.state.address, parseInt(this.state.value), this.state.species, {from: accounts[0] , gas:999999});
+            //  txinstance.fakeTrade();
+            //  console.log(txinstance.getTokens.call(accounts[0], 'oak', 'DK', {from: accounts[0]}).then(value => {
+            //      return value;
+            //  }));
+            //   txinstance.trade(accounts[1], 4, 'oak', {from: accounts[0], gas:999999})
+         });
+
+
+
+     });
+   }
+
+  handleIssueChange(event) {
+      console.log(event.target.id);
+      switch(event.target.id) {
+          case 'issueAddress':
+            this.setState({issueAddress: event.target.value});
+            break;
+          case 'issueVolume':
+            this.setState({issueVolume: event.target.value});
+            break;
+          case 'issueSpecies':
+            this.setState({issueSpecies: event.target.value});
+            break;
+            case 'issueCountry':
+              this.setState({issueCountry: event.target.value});
+              break;
           default:
               '';
       }
@@ -243,22 +301,41 @@ class App extends Component {
   render() {
       console.log(this.state);
       const list = this.state.actors.map((item, i) => {
-          var maxLen = 3;
-          var actorAddress = `${item[0].slice(0, 3)}...${item[0].slice(-maxLen, item[0].length-1)}`;
+          var maxLen = -1;
+        //   var actorAddress = `${item[0].slice(0, maxLen)}...${item[0].slice(-maxLen, item[0].length-1)}`;
           console.log(item);
-          return <tr key={i}><td>{actorAddress}</td><td>{parseInt(item[1])}</td><td>{this.state.web3.toUtf8(item[2])}</td><td>{this.state.web3.toUtf8(item[3])}</td></tr>;
+          return <tr key={i}><td>{item[0]}</td><td>{parseInt(item[1])}</td><td>{this.state.web3.toUtf8(item[2])}</td><td>{this.state.web3.toUtf8(item[3])}</td></tr>;
       });
+      const imgStyle = {
+        width: '100px',
+        heiht: '100px',
+
+      };
     return (
       <div className="App">
-        <nav className="navbar pure-menu pure-menu-horizontal">
-            <a href="#" className="pure-menu-heading pure-menu-link">Truffle Box</a>
-        </nav>
+
 
         <main className="container">
           <div className="pure-g">
             <div className="pure-u-1-1">
-              <h1>Timber Chain</h1>
-              <table>
+
+            <div className="row">
+                <div className="col-lg-12 text-center">
+                    <h1 className="mt-5">NEPCo-Nect</h1>
+                    <p className="lead"><strong>N</strong>etworked Exchange for Certified Timber</p>
+                    <center>
+                        <img src="block.png" alt="Blockchain" style={imgStyle}></img>
+                    </center>
+                </div>
+            </div>
+
+
+
+
+
+
+              <h2>Trading History</h2>
+              <table className="table table-striped">
                   <thead>
                     <tr>
                       <th>Address</th>
@@ -272,39 +349,109 @@ class App extends Component {
                   </tbody>
               </table>
 
-              <div>
-              <form onSubmit={this.handleSubmit}>
-                  <label>
-                    Address
-                    <input
-                    id='address'
-                      name="address"
-                      type="text"
-                      onChange={this.handleChange} />
-                  </label>
-                  <br />
-                  <label>
-                    Volume
-                    <input
-                    id='volume'
-                      name="value"
-                      type="number"
-                    //   value={this.state.numberOfGuests}
-                      onChange={this.handleChange} />
-                  </label>
-                  <label>
-                    Species
-                    <input
-                    id='species'
-                      name="species"
-                      type="text"
-                    //   value={this.state.numberOfGuests}
-                      onChange={this.handleChange} />
-                  </label>
-                  <input type="submit" value="Trade" />
-                </form>
+              <div className='row'>
+                  <div className='col-lg-6'>
+                      <h3> Transfer Tokens </h3>
+                      <form className="form-group" onSubmit={this.handleSubmit}>
 
+                          <div className='form-group'>
+                          <label>
+                            To Address
+                            <input
+                            className="form-control"
+                            id='address'
+                              name="address"
+                              type="text"
+                              onChange={this.handleChange} />
+                          </label>
+                          </div>
+
+                          <div className='form-group'>
+                          <label>
+                            Volume
+                            <input
+                            className="form-control"
+                            id='volume'
+                              name="value"
+                              type="number"
+                            //   value={this.state.numberOfGuests}
+                              onChange={this.handleChange} />
+                          </label>
+                          </div>
+
+                          <div className='form-group'>
+                          <label>
+                            Species
+                            <input
+                            className="form-control"
+                            id='species'
+                              name="species"
+                              type="text"
+                            //   value={this.state.numberOfGuests}
+                              onChange={this.handleChange} />
+                          </label>
+                          </div>
+                          <input type="submit" value="Trade" />
+                        </form>
+                  </div>
+                  <div className='col-lg-6'>
+                      <h3> Issue Tokens </h3>
+                      <form className="form-group" onSubmit={this.handleIssueSubmit}>
+
+                          <div className='form-group'>
+                          <label>
+                            To Address
+                            <input
+                            className="form-control"
+                            id='issueAddress'
+                              name="address"
+                              type="text"
+                              onChange={this.handleIssueChange} />
+                          </label>
+                          </div>
+
+                          <div className='form-group'>
+                          <label>
+                            Species
+                            <input
+                            className="form-control"
+                            id='issueSpecies'
+                              name="value"
+                              type="text"
+                            //   value={this.state.numberOfGuests}
+                              onChange={this.handleIssueChange} />
+                          </label>
+                          </div>
+
+                          <div className='form-group'>
+                          <label>
+                            Country
+                            <input
+                            className="form-control"
+                            id='issueCountry'
+                              name="country"
+                              type="text"
+                            //   value={this.state.numberOfGuests}
+                              onChange={this.handleIssueChange} />
+                          </label>
+                          </div>
+                          <div className='form-group'>
+                          <label>
+                            Volume
+                            <input
+                            className="form-control"
+                            id='issueVolume'
+                              name="volume"
+                              type="number"
+                            //   value={this.state.numberOfGuests}
+                              onChange={this.handleIssueChange} />
+                          </label>
+                          </div>
+                          <input type="submit" value="Issue" />
+                        </form>
+                  </div>
               </div>
+
 
             </div>
 

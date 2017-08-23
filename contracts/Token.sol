@@ -53,7 +53,6 @@ function issueTokens(address _actor, bytes32 species, bytes32 origin, uint value
     if(MANAGER != 0x0) {
         address transaction = ContractProvider(MANAGER).contracts("transaction");
         if (msg.sender == transaction) {
-            /*return ("", 4);*/
             address timbertokendb = ContractProvider(MANAGER).contracts("timbertokendb");
             return TimberTokenDb(timbertokendb).decreaseTokens(actor, species, value);
         }

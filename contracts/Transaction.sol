@@ -64,6 +64,7 @@ contract Transaction is SupplyChainManagerEnabled {
       // Only the SupplyManager contract can check if the address has tokens
       /*address supplychainmanager = ContractProvider(MANAGER).contracts("supplychainmanager");
       require(supplychainmanager != 0x0);*/
+      
       address token = ContractProvider(MANAGER).contracts("token");
       require(token != 0x0);
       address certificate = ContractProvider(MANAGER).contracts("certificate");

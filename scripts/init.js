@@ -33,6 +33,7 @@ module.exports = function (callback) {
   manager.issueCertificate(web3.eth.accounts[0], 90000, 'TIMBERTEAM');
   manager.issueCertificate(web3.eth.accounts[1], 90000, 'NepConDK');
   manager.issueCertificate(web3.eth.accounts[2], 90000, 'NepConES');
+  manager.issueCertificate(web3.eth.accounts[3], 90000, 'NepConTH');
 
 // Trading
   var tx = Transaction.at(Transaction.address);
