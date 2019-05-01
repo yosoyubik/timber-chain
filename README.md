@@ -2,6 +2,9 @@
 
 Networked exchange for certified timber.
 
+- [Slides presented at the Blockchain Summer School 2017](https://www.dropbox.com/s/pbht894ijnymhx6/170818_NEPCon_Team5_final.pdf?dl=0)
+  - [Pictures](https://www.dropbox.com/sh/nw3m73nhtq7em9j/AABKkyVmRJloKgJiv83JlVkFa?dl=0)
+
 ## Info
 
 Enforcing certification standards to ensure sustainable timber utilization along the value chain is complex and inaccurate.
